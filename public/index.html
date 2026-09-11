@@ -3,239 +3,142 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Addy AI — Close mortgage loans in hours, not weeks</title>
+<title>Addy AI — Pipeline</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%238b5cf6'/><text y='.9em' x='50%25' text-anchor='middle' font-size='64' fill='white' font-family='sans-serif' font-weight='bold'>A</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%238b5cf6'/><text y='.92em' x='50%25' text-anchor='middle' font-size='62' fill='white' font-family='sans-serif' font-weight='bold'>A</text></svg>">
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
-<!-- ============ NAV ============ -->
-<header class="nav">
-  <div class="nav-in">
+<!-- ================= APP SHELL ================= -->
+<div class="app">
+
+  <!-- ---------- sidebar nav ---------- -->
+  <aside class="rail">
     <a class="brand" href="#">
-      <span class="brand-mark" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-      </span>
-      Addy AI
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+      <span class="brand-tx">Addy AI</span>
     </a>
-    <nav class="nav-links" aria-label="Main">
-      <a href="#">Solutions <span class="caret">⌄</span></a>
-      <a href="#">Resources <span class="caret">⌄</span></a>
-      <a href="#">About</a>
-      <a href="#">Testimonials</a>
-      <a href="#">Contact</a>
+    <nav class="rail-nav" aria-label="Main">
+      <a href="#" class="on"><i aria-hidden="true">▤</i> Pipeline</a>
+      <a href="#"><i aria-hidden="true">◫</i> Loan Files</a>
+      <a href="#"><i aria-hidden="true">◷</i> Conditions</a>
+      <a href="#"><i aria-hidden="true">⌕</i> Guidelines</a>
+      <a href="#"><i aria-hidden="true">▦</i> Pricing</a>
+      <a href="#"><i aria-hidden="true">⚿</i> Documents</a>
     </nav>
-    <a class="btn-primary nav-cta" href="#">Book a Demo</a>
-  </div>
-</header>
-
-<!-- ============ HERO ============ -->
-<section class="hero">
-  <div class="dots" aria-hidden="true"></div>
-  <div class="hero-in">
-    <div class="soc2">
-      <span class="soc2-badge" aria-hidden="true">SOC&nbsp;2</span>
-      Addy AI is SOC 2 Type 2 Compliant. <a href="#">Learn more</a>
-    </div>
-    <h1>Close mortgage loans<br>in hours, not weeks</h1>
-    <p class="hero-sub">Our custom AI agents handle manual tasks in the mortgage process, helping you close loans faster and increase profits.</p>
-    <a class="btn-primary btn-lg" href="#">Book a Demo →</a>
-  </div>
-</section>
-
-<!-- ============ LOAN FILE ============ -->
-<section class="section">
-  <div class="wrap">
-    <div class="loanfile-row">
-      <div class="loanfile">
-        <p class="lf-eyebrow">Loan File</p>
-        <h3 class="lf-title">New Loan File</h3>
-        <div class="lf-rows">
-          <div class="lf-row"><span>Borrower</span><b>Sarah M.</b></div>
-          <div class="lf-row"><span>Loan Amount</span><b>$625,000</b></div>
-          <div class="lf-row"><span>Loan Type</span><b>Conventional Purchase</b></div>
-          <div class="lf-row"><span>Income Type</span><b>Self-employed + W-2</b></div>
-        </div>
-        <div class="lf-tags">
-          <span class="tag-grey">Needs Review</span>
-          <span class="tag-violet"><i class="dot"></i> Addy AI Agent: Reviewing</span>
-        </div>
-      </div>
-      <ul class="pills">
-        <li>Read documents</li>
-        <li>Verify income</li>
-        <li>Check AUS findings</li>
-        <li>Compare guidelines</li>
-        <li>Clear conditions</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FEATURES ============ -->
-<section class="section">
-  <div class="wrap">
-    <h2 class="h2">Close loans 90% faster</h2>
-    <div class="cards">
-      <article class="card">
-        <div class="card-art">
-          <div class="mini">
-            <p class="mini-t"><b>AI Policy Check</b> <span class="ok">● Acceptable</span></p>
-            <p class="mini-b">Based on your credit policy, this loan scenario is acceptable.</p>
-          </div>
-        </div>
-        <h3>Submit CTC-ready loans in 5 minutes</h3>
-        <p>AI instantly checks loans against lending guidelines. If the loan is ineligible, AI identifies missing items, and offers suggestions to make the loan work.</p>
-        <a class="learn" href="#">Learn More &gt;</a>
-      </article>
-
-      <article class="card">
-        <div class="card-art">
-          <div class="mini">
-            <p class="mini-t"><b>Loan Opportunity</b></p>
-            <div class="field"><label>Loan Amount</label><div class="input">$3,000,000</div></div>
-            <p class="eligible">This amount is eligible for lending</p>
-            <div class="two-up">
-              <div class="field"><label>LTV</label><div class="input">80 <i class="ok-dot"></i></div></div>
-              <div class="field"><label>CLTV</label><div class="input">80 <i class="ok-dot"></i></div></div>
-            </div>
-          </div>
-        </div>
-        <h3>Resolve loan conditions with AI</h3>
-        <p>AI reviews conditions and AUS findings to identify what the loan needs. It checks docs in the file and helps you request anything missing from clients.</p>
-        <a class="learn" href="#">Learn More &gt;</a>
-      </article>
-
-      <article class="card">
-        <div class="card-art">
-          <div class="mini">
-            <p class="mini-t"><b>Add a new deal</b></p>
-            <div class="field"><label>Name</label><div class="input">Michael Smith</div></div>
-            <div class="field"><label>Loan Amount</label><div class="input">$3,000,000</div></div>
-            <div class="add-btn">+ Add to Salesforce</div>
-          </div>
-        </div>
-        <h3>Integrate with your LOS</h3>
-        <p>Seamlessly connect Addy AI with your LOS to automatically sync loan data, enhancing your workflow efficiency.</p>
-        <a class="learn" href="#">Learn More &gt;</a>
-      </article>
-
-      <article class="card">
-        <div class="card-art">
-          <div class="mini">
-            <p class="mini-t"><b>Follow-ups</b></p>
-            <p class="mini-b">Addy called Sarah M. about the July bank statement. Upload link sent — she confirmed she'll send it tonight.</p>
-            <p class="mini-meta">2 minutes ago · via Addy Voice</p>
-          </div>
-        </div>
-        <h3>Request docs from clients fast</h3>
-        <p>In a competitive lending market, speed and client satisfaction matters. Addy AI lets you train specialized AI agents to handle document requests around the clock.</p>
-        <a class="learn" href="#">Learn More &gt;</a>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============ TRAIN ============ -->
-<section class="section section-alt">
-  <div class="wrap narrow">
-    <h2 class="h2 center">Train your AI agents on your data,<br>guidelines, rate sheets, and more</h2>
-    <p class="lede center">Scale your business with AI Agents built for lending. Go live in minutes with no complex setup required. Connect your agents to your LOS, POS, Microsoft Teams, and more.</p>
-    <div class="chat">
-      <div class="bubble lo"><p class="who">Loan Officer</p><p>What is the max LTV for a single unit principal residence for Fannie Mae?</p></div>
-      <div class="bubble ai"><p class="who"><span class="ai-mark" aria-hidden="true"></span> AI Agent</p><p>Hi! The maximum LTV is 97%</p><p class="src">🔗 Source (Fannie Mae)</p></div>
-      <div class="bubble lo"><p class="who">Loan Officer</p><p>How about Freddie Mac for a 1-unit primary residence?</p></div>
-      <div class="bubble ai"><p class="who"><span class="ai-mark" aria-hidden="true"></span> AI Agent</p><p>95% for 1-unit primary residence on purchase or no cash-out refinance</p><p class="src">🔗 Source (Freddie Mac)</p></div>
-    </div>
-  </div>
-</section>
-
-<footer class="foot">
-  <div class="wrap">
-    <p>Addy AI — demo environment. Voice assistant powered by a live agent.</p>
-  </div>
-</footer>
-
-<!-- ============ VOICE WIDGET ============ -->
-<button id="avOpen" class="av-fab" aria-label="Open Addy Voice assistant">
-  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>
-  </svg>
-  <span class="av-fab-pulse" aria-hidden="true"></span>
-</button>
-
-<aside id="avPanel" class="av-panel" aria-label="Addy Voice assistant" hidden>
-  <header class="av-head">
-    <span class="av-logo" aria-hidden="true"></span>
-    <div class="av-title">Addy <b>Voice</b></div>
-    <button id="avClose" class="av-x" aria-label="Close assistant">✕</button>
-  </header>
-
-  <div class="av-tabs" role="tablist">
-    <button class="av-tab" role="tab" aria-selected="false" tabindex="-1">Checklist</button>
-    <button class="av-tab" role="tab" aria-selected="true">Voice</button>
-    <button class="av-tab" role="tab" aria-selected="false" tabindex="-1">Guidelines</button>
-  </div>
-
-  <div class="av-body" id="avBody">
-    <!-- idle -->
-    <div id="avIdle">
-      <div class="av-card">
-        <div class="av-lead">
-          <span class="av-av">SM</span>
-          <div>
-            <p class="av-nm">Sarah M.</p>
-            <p class="av-ph" id="avPhoneLabel">Loan 4471 · Conventional Purchase</p>
-          </div>
-        </div>
-        <label class="av-field">
-          <span>Phone number</span>
-          <input id="avPhone" type="tel" inputmode="tel" placeholder="+1 555 000 0000" autocomplete="tel">
-        </label>
-        <label class="av-field">
-          <span>What should Addy ask for?</span>
-          <textarea id="avNote" rows="3">Call Sarah about loan 4471. Underwriting needs the July bank statement for Chase checking ending 4421, and a short letter explaining the $4,200 deposit on July 12th. Offer to text a secure upload link.</textarea>
-        </label>
-      </div>
-
-      <div class="av-consent">
-        <span class="av-check" aria-hidden="true">✓</span>
-        <div><b>Consent on file.</b> E-signed — servicing calls, artificial voice disclosed.</div>
-      </div>
-
-      <div class="av-note">
-        Pulled from the open conditions on this file. Nothing scripted by hand.
+    <div class="rail-foot">
+      <div class="me">
+        <span class="me-av">DR</span>
+        <div><p class="me-n">Danielle Reyes</p><p class="me-r">Loan Officer</p></div>
       </div>
     </div>
+  </aside>
 
-    <!-- live -->
-    <div id="avLive" hidden>
-      <div class="av-callcard">
-        <div class="av-calltop">
-          <span class="av-av dark">SM</span>
-          <div class="av-who">
-            <p class="n">Sarah M.</p>
-            <p class="p" id="avLivePhone">—</p>
-          </div>
-          <span class="av-live"><i></i><span id="avTimer">0:00</span></span>
-        </div>
-        <div class="av-wave" id="avWave" aria-hidden="true"></div>
+  <!-- ---------- main ---------- -->
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1>Pipeline</h1>
+        <p class="crumb">12 active files · 4 need attention</p>
       </div>
-      <div class="av-log" id="avLog" role="status" aria-live="polite"></div>
+      <div class="topbar-right">
+        <span class="search" aria-hidden="true">⌕ Search files</span>
+        <a class="btn-primary" href="#">New Loan File</a>
+      </div>
+    </header>
+
+    <section class="stats">
+      <div class="stat"><span class="k">Active files</span><span class="v">12</span></div>
+      <div class="stat"><span class="k">Conditions open</span><span class="v">31</span></div>
+      <div class="stat"><span class="k">Awaiting borrower</span><span class="v warn">18</span></div>
+      <div class="stat"><span class="k">Avg. days to close</span><span class="v">27</span></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd">
+        <h2>Files needing attention</h2>
+        <span class="hint">Select a file to work it</span>
+      </div>
+
+      <div class="rows" id="leadRows">
+        <!-- rows injected by app.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- ---------- right sidebar: Addy Voice ---------- -->
+  <aside class="side" aria-label="Addy assistant">
+    <div class="side-hd">
+      <span class="side-logo" aria-hidden="true"></span>
+      <div class="side-title">Addy <b>Assistant</b></div>
+      <span class="side-badge" id="sideBadge">Ready</span>
     </div>
-  </div>
 
-  <div class="av-foot">
-    <button id="avCall" class="av-btn av-btn-pri">Start the call</button>
-    <button id="avEnd" class="av-btn av-btn-dgr" disabled>End</button>
-  </div>
-  <p class="av-legal">Demo environment · calls are recorded</p>
-</aside>
+    <div class="side-tabs" role="tablist">
+      <button class="side-tab" role="tab" aria-selected="false" tabindex="-1">Checklist</button>
+      <button class="side-tab" role="tab" aria-selected="true">Voice</button>
+      <button class="side-tab" role="tab" aria-selected="false" tabindex="-1">Guidelines</button>
+    </div>
 
-<script src="/widget.js" defer></script>
+    <div class="side-body" id="sideBody">
+
+      <!-- selected lead -->
+      <div class="sel" id="sel">
+        <div class="sel-top">
+          <span class="sel-av" id="selAv">SM</span>
+          <div class="sel-who">
+            <p class="sel-n" id="selName">Sarah Mitchell</p>
+            <p class="sel-m" id="selMeta">Loan 4471 · Conventional Purchase</p>
+          </div>
+        </div>
+        <div class="sel-grid" id="selGrid"></div>
+      </div>
+
+      <!-- what it will do -->
+      <div class="ask">
+        <h4>Addy will ask for</h4>
+        <ul id="askList"></ul>
+      </div>
+
+      <div class="consent">
+        <span class="ck" aria-hidden="true">✓</span>
+        <div><b>Consent on file.</b> E-signed — servicing contact, AI disclosed.</div>
+      </div>
+
+      <!-- live call -->
+      <div class="call" id="callCard" hidden>
+        <div class="call-top">
+          <span class="call-dot" id="callDot"></span>
+          <span class="call-st" id="callStatus">Connecting…</span>
+          <span class="call-t" id="callTimer">0:00</span>
+        </div>
+        <div class="wave" id="wave" aria-hidden="true"></div>
+        <p class="call-hint" id="callHint">Speak normally — Addy is listening.</p>
+      </div>
+
+      <div class="log" id="log" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="side-foot">
+      <button id="btnStart" class="btn btn-pri">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>
+        </svg>
+        Talk to Addy
+      </button>
+      <button id="btnEnd" class="btn btn-dgr" disabled>End</button>
+    </div>
+    <p class="legal">Browser call · your mic · recorded for quality</p>
+  </aside>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/livekit-client/2.5.7/livekit-client.umd.min.js"></script>
+<script src="/config.js"></script>
+<script src="/app.js" defer></script>
 </body>
 </html>
