@@ -7,7 +7,7 @@
 
   var CFG = window.ADDY_CONFIG || {};
   var API = (CFG.apiUrl || '').replace(/\/+$/, '');
-  var KEY = CFG.callKey || '';
+  var FALLBACK_KEY = CFG.callKey || '';
   var ENV = CFG.env || 'prod';
 
   var $ = function (id) { return document.getElementById(id); };
@@ -19,53 +19,120 @@
      there are no functions, so fall back to calling the backend directly; that
      path does need the origin allowlisted. */
   var USE_PROXY = location.protocol === 'http:' || location.protocol === 'https:';
-  function ep(path) {
+  function ep(path, key) {
     if (USE_PROXY) {
       return '/api/share?path=' + path
         + '&api=' + encodeURIComponent(API)
-        + '&key=' + encodeURIComponent(KEY)
+        + '&key=' + encodeURIComponent(key)
         + '&env=' + encodeURIComponent(ENV);
     }
-    return API + '/share/' + encodeURIComponent(KEY) + '/' + path;
+    return API + '/share/' + encodeURIComponent(key) + '/' + path;
   }
 
-  /* ---------------- demo leads ---------------- */
+  /* ================= demo data ================= */
   var LEADS = [
     {
       id: 'l1', initials: 'SM', name: 'Sarah Mitchell',
       meta: 'Loan 4471 · Conventional Purchase',
       need: 'July bank statement + LOE for $4,200 deposit',
       status: ['Awaiting borrower', 'w'],
+      callKey: 'f705df7553814fc9be562ab804f7e54c',
       facts: [['Amount', '$625,000'], ['LTV', '80.0%'], ['DTI', '38.2%'], ['FICO', '744']],
-      ask: ['July bank statement — Chase ····4421', 'Letter explaining the $4,200 deposit on 07/12']
+      ask: ['July bank statement — Chase ····4421', 'Letter explaining the $4,200 deposit on 07/12'],
+      checklist: [
+        ['done', 'Verification of employment', 'Received 09/08 · matched to AUS findings'],
+        ['done', "Homeowner's insurance binder", 'Received 09/09 · verified'],
+        ['done', 'Credit report', 'Pulled 09/02 · FICO 744, no derogatory items'],
+        ['open', 'Bank statement — July 2026', 'Chase checking ····4421. Two most recent months required.'],
+        ['open', 'Letter of explanation — large deposit', '$4,200 deposit on 07/12. Source and documentation required.'],
+        ['wait', 'Final AUS resubmission', 'Blocked until the two items above clear'],
+        ['wait', 'Closing disclosure', 'Issue 3 business days before closing']
+      ],
+      guidelines: [
+        ['Max LTV', '97%', 'Fannie Mae · 1-unit principal residence, fixed rate'],
+        ['This loan', '80.0%', 'Within guideline · 17 pts of headroom'],
+        ['Max DTI', '45%', 'Fannie Mae · with DU Approve/Eligible'],
+        ['This loan', '38.2%', 'Within guideline'],
+        ['Min FICO', '620', 'Conventional conforming'],
+        ['Large deposit', '> 50% of monthly income', 'Requires documented source · B3-4.2-02']
+      ]
     },
     {
       id: 'l2', initials: 'DK', name: 'David Kim',
       meta: 'Loan 4482 · FHA Purchase',
       need: 'Updated paystubs — last 30 days',
       status: ['Awaiting borrower', 'w'],
+      callKey: '',
       facts: [['Amount', '$412,000'], ['LTV', '96.5%'], ['DTI', '41.8%'], ['FICO', '689']],
-      ask: ['Two most recent paystubs', 'Confirm employer contact for VOE']
+      ask: ['Two most recent paystubs', 'Confirm employer contact for VOE'],
+      checklist: [
+        ['done', 'FHA case number assigned', 'Assigned 09/01'],
+        ['done', 'Appraisal received', 'Value supports purchase price'],
+        ['open', 'Paystubs — last 30 days', 'Two most recent consecutive periods'],
+        ['open', 'Verbal VOE', 'Employer phone number needs confirming'],
+        ['wait', 'MIP disclosure', 'Pending final figures']
+      ],
+      guidelines: [
+        ['Max LTV', '96.5%', 'FHA · minimum 3.5% down, FICO ≥ 580'],
+        ['This loan', '96.5%', 'At guideline maximum'],
+        ['Max DTI', '43%', 'FHA · manual underwrite without compensating factors'],
+        ['This loan', '41.8%', 'Within guideline · limited headroom'],
+        ['Min FICO', '580', 'FHA · for 3.5% down payment']
+      ]
     },
     {
       id: 'l3', initials: 'RA', name: 'Rosa Alvarez',
       meta: 'Loan 4455 · Conventional Refi',
-      need: 'Homeowner\'s insurance declaration page',
+      need: "Homeowner's insurance declaration page",
       status: ['Needs call', 'v'],
+      callKey: 'd6930306a370469b99acec6678f55f1f',
       facts: [['Amount', '$338,500'], ['LTV', '72.1%'], ['DTI', '33.4%'], ['FICO', '771']],
-      ask: ['Insurance declaration page', 'Confirm mailing address on file']
+      ask: ['Insurance declaration page', 'Confirm mailing address on file'],
+      checklist: [
+        ['done', 'Payoff statement received', 'Current servicer · good through 10/15'],
+        ['done', 'Title commitment', 'Clear · no liens beyond the existing mortgage'],
+        ['done', 'Income documentation', 'W-2 and two most recent paystubs verified'],
+        ['open', "Homeowner's insurance declaration page", 'Current policy, showing the new lender as mortgagee'],
+        ['open', 'Mailing address confirmation', 'File address differs from the credit report'],
+        ['wait', 'Final CD and closing package', 'Ready once the two items above clear']
+      ],
+      guidelines: [
+        ['Max LTV', '80%', 'Fannie Mae · no cash-out refinance, 1-unit'],
+        ['This loan', '72.1%', 'Within guideline · comfortable headroom'],
+        ['Max DTI', '45%', 'Fannie Mae · with DU Approve/Eligible'],
+        ['This loan', '33.4%', 'Well within guideline'],
+        ['Min FICO', '620', 'Conventional conforming'],
+        ['Insurance', 'Required at closing', 'Dec page must name the new lender · B7-3']
+      ]
     },
     {
       id: 'l4', initials: 'JT', name: 'James Thornton',
       meta: 'Loan 4490 · Jumbo Purchase',
       need: 'Gift letter + donor bank statement',
       status: ['Awaiting borrower', 'w'],
+      callKey: '',
       facts: [['Amount', '$1,240,000'], ['LTV', '78.0%'], ['DTI', '36.0%'], ['FICO', '802']],
-      ask: ['Signed gift letter', 'Donor bank statement showing the transfer']
+      ask: ['Signed gift letter', 'Donor bank statement showing the transfer'],
+      checklist: [
+        ['done', 'Asset verification — primary accounts', 'Reserves exceed 12 months PITI'],
+        ['done', 'Two years tax returns', 'Received and reviewed'],
+        ['open', 'Gift letter', 'Signed by donor, stating no repayment expected'],
+        ['open', 'Donor bank statement', 'Showing the funds and the transfer out'],
+        ['wait', 'Second appraisal', 'Required over $1M on this product']
+      ],
+      guidelines: [
+        ['Max LTV', '80%', 'Jumbo · 1-unit primary, portfolio product'],
+        ['This loan', '78.0%', 'Within guideline'],
+        ['Max DTI', '43%', 'Jumbo · portfolio overlay'],
+        ['This loan', '36.0%', 'Within guideline'],
+        ['Min FICO', '720', 'Jumbo · portfolio overlay'],
+        ['Reserves', '12 months PITI', 'Required over $1M']
+      ]
     }
   ];
 
   var current = LEADS[0];
+  var activeTab = 'voice';
 
   /* ---------------- render leads ---------------- */
   function renderRows() {
@@ -76,9 +143,11 @@
       row.className = 'row' + (l.id === current.id ? ' on' : '');
       row.tabIndex = 0;
       row.setAttribute('role', 'button');
+      var agentTag = l.callKey
+        ? '<span class="agent-tag" title="This file has a live voice agent">\u25CF Agent ready</span>' : '';
       row.innerHTML =
         '<span class="r-av">' + l.initials + '</span>' +
-        '<div><p class="r-n">' + l.name + '</p><p class="r-m">' + l.meta + '</p></div>' +
+        '<div><p class="r-n">' + l.name + agentTag + '</p><p class="r-m">' + l.meta + '</p></div>' +
         '<p class="r-need">' + l.need + '</p>' +
         '<span class="chip ' + l.status[1] + '">' + l.status[0] + '</span>';
       row.addEventListener('click', function () { select(l); });
@@ -94,6 +163,7 @@
     current = l;
     renderRows();
     renderSelected();
+    renderTab();
   }
 
   function renderSelected() {
@@ -108,10 +178,72 @@
       c.innerHTML = '<span class="k">' + f[0] + '</span><span class="v">' + f[1] + '</span>';
       g.appendChild(c);
     });
+  }
 
+  /* ================= tabs ================= */
+  var tabs = document.querySelectorAll('.side-tab');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      if (connected) return;
+      activeTab = t.dataset.tab;
+      tabs.forEach(function (x) {
+        var on = x === t;
+        x.setAttribute('aria-selected', on ? 'true' : 'false');
+        x.tabIndex = on ? 0 : -1;
+      });
+      renderTab();
+    });
+  });
+
+  function renderTab() {
+    $('paneVoice').hidden = activeTab !== 'voice';
+    $('paneChecklist').hidden = activeTab !== 'checklist';
+    $('paneGuidelines').hidden = activeTab !== 'guidelines';
+    $('sideFoot').hidden = activeTab !== 'voice';
+    if (activeTab === 'voice') renderVoicePane();
+    if (activeTab === 'checklist') renderChecklist();
+    if (activeTab === 'guidelines') renderGuidelines();
+  }
+
+  function renderVoicePane() {
     var ul = $('askList'); ul.innerHTML = '';
     current.ask.forEach(function (a) {
       var li = document.createElement('li'); li.textContent = a; ul.appendChild(li);
+    });
+    $('noAgent').hidden = !!current.callKey;
+    startBtn.disabled = !current.callKey || connected;
+    startBtn.title = current.callKey ? '' : 'No voice agent configured for this file';
+  }
+
+  function renderChecklist() {
+    var wrap = $('checkList'); wrap.innerHTML = '';
+    var counts = { done: 0, open: 0, wait: 0 };
+    current.checklist.forEach(function (c) { counts[c[0]]++; });
+    $('checkSummary').innerHTML =
+      '<span class="cs done">' + counts.done + ' cleared</span>' +
+      '<span class="cs open">' + counts.open + ' outstanding</span>' +
+      '<span class="cs wait">' + counts.wait + ' blocked</span>';
+    current.checklist.forEach(function (c) {
+      var mark = c[0] === 'done' ? '\u2713' : (c[0] === 'open' ? '!' : '\u00B7');
+      var d2 = document.createElement('div');
+      d2.className = 'ci ' + c[0];
+      d2.innerHTML = '<span class="ci-m">' + mark + '</span>' +
+        '<div><p class="ci-t">' + c[1] + '</p><p class="ci-d">' + c[2] + '</p></div>';
+      wrap.appendChild(d2);
+    });
+  }
+
+  function renderGuidelines() {
+    var wrap = $('guideList'); wrap.innerHTML = '';
+    $('guideFor').textContent = current.meta;
+    current.guidelines.forEach(function (g) {
+      var isThis = /^This loan$/i.test(g[0]);
+      var d2 = document.createElement('div');
+      d2.className = 'gi' + (isThis ? ' this' : '');
+      d2.innerHTML =
+        '<div class="gi-top"><span class="gi-k">' + g[0] + '</span><span class="gi-v">' + g[1] + '</span></div>' +
+        '<p class="gi-s">' + g[2] + '</p>';
+      wrap.appendChild(d2);
     });
   }
 
@@ -206,8 +338,9 @@
   async function start() {
     if (connected) return;
 
-    if (!API || !KEY) {
-      ev('!', 'Not configured', 'Set apiUrl and callKey in config.js', 'err');
+    var key = current.callKey || FALLBACK_KEY;
+    if (!API || !key) {
+      ev('!', 'No agent for this file', 'Add a callKey in app.js', 'err');
       badge('Setup needed', 'err');
       return;
     }
@@ -224,7 +357,7 @@
     ev('→', 'Starting call', current.name, 'on');
 
     try {
-      var r = await fetch(ep('token'), {
+      var r = await fetch(ep('token', key), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ env: ENV })
@@ -293,7 +426,8 @@
     timer(false); stopMeter();
     setStatus('Not connected', true);
     badge('Ready', '');
-    startBtn.disabled = false; endBtn.disabled = true;
+    endBtn.disabled = true;
+    startBtn.disabled = !current.callKey;
   }
 
   window.addEventListener('beforeunload', function () { if (room) try { room.disconnect(); } catch (_) {} });
@@ -301,13 +435,13 @@
   /* ---------------- boot ---------------- */
   renderRows();
   renderSelected();
+  renderTab();
 
-  if (API && KEY) {
-    fetch(ep('meta'))
+  var bootKey = current.callKey || FALLBACK_KEY;
+  if (API && bootKey) {
+    fetch(ep('meta', bootKey))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (m) { if (m && m.name) $('sideBadge').title = 'Agent: ' + m.name; })
       .catch(function () {});
-  } else {
-    badge('Setup needed', 'err');
   }
 })();

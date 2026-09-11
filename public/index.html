@@ -78,9 +78,9 @@
     </div>
 
     <div class="side-tabs" role="tablist">
-      <button class="side-tab" role="tab" aria-selected="false" tabindex="-1">Checklist</button>
-      <button class="side-tab" role="tab" aria-selected="true">Voice</button>
-      <button class="side-tab" role="tab" aria-selected="false" tabindex="-1">Guidelines</button>
+      <button class="side-tab" role="tab" data-tab="checklist" aria-selected="false" tabindex="-1">Checklist</button>
+      <button class="side-tab" role="tab" data-tab="voice" aria-selected="true">Voice</button>
+      <button class="side-tab" role="tab" data-tab="guidelines" aria-selected="false" tabindex="-1">Guidelines</button>
     </div>
 
     <div class="side-body" id="sideBody">
@@ -97,32 +97,53 @@
         <div class="sel-grid" id="selGrid"></div>
       </div>
 
-      <!-- what it will do -->
-      <div class="ask">
-        <h4>Addy will ask for</h4>
-        <ul id="askList"></ul>
-      </div>
-
-      <div class="consent">
-        <span class="ck" aria-hidden="true">✓</span>
-        <div><b>Consent on file.</b> E-signed — servicing contact, AI disclosed.</div>
-      </div>
-
-      <!-- live call -->
-      <div class="call" id="callCard" hidden>
-        <div class="call-top">
-          <span class="call-dot" id="callDot"></span>
-          <span class="call-st" id="callStatus">Connecting…</span>
-          <span class="call-t" id="callTimer">0:00</span>
+      <!-- ===== VOICE ===== -->
+      <div id="paneVoice">
+        <div class="ask">
+          <h4>Addy will ask for</h4>
+          <ul id="askList"></ul>
         </div>
-        <div class="wave" id="wave" aria-hidden="true"></div>
-        <p class="call-hint" id="callHint">Speak normally — Addy is listening.</p>
+
+        <div class="consent">
+          <span class="ck" aria-hidden="true">✓</span>
+          <div><b>Consent on file.</b> E-signed — servicing contact, AI disclosed.</div>
+        </div>
+
+        <div class="noagent" id="noAgent" hidden>
+          <span class="na-i" aria-hidden="true">!</span>
+          <div>No voice agent configured for this file yet. Try <b>Sarah Mitchell</b> or <b>Rosa Alvarez</b>.</div>
+        </div>
+
+        <div class="call" id="callCard" hidden>
+          <div class="call-top">
+            <span class="call-dot" id="callDot"></span>
+            <span class="call-st" id="callStatus">Connecting…</span>
+            <span class="call-t" id="callTimer">0:00</span>
+          </div>
+          <div class="wave" id="wave" aria-hidden="true"></div>
+          <p class="call-hint" id="callHint">Speak normally — Addy is listening.</p>
+        </div>
+
+        <div class="log" id="log" role="status" aria-live="polite"></div>
       </div>
 
-      <div class="log" id="log" role="status" aria-live="polite"></div>
+      <!-- ===== CHECKLIST ===== -->
+      <div id="paneChecklist" hidden>
+        <div class="check-sum" id="checkSummary"></div>
+        <div class="check-list" id="checkList"></div>
+        <p class="pane-note">Generated from the file and AUS findings. Outstanding items become the call brief.</p>
+      </div>
+
+      <!-- ===== GUIDELINES ===== -->
+      <div id="paneGuidelines" hidden>
+        <p class="guide-for" id="guideFor"></p>
+        <div class="guide-list" id="guideList"></div>
+        <p class="pane-note">Agency guidelines checked against this scenario. Voice never quotes these — it defers to the file.</p>
+      </div>
+
     </div>
 
-    <div class="side-foot">
+    <div class="side-foot" id="sideFoot">
       <button id="btnStart" class="btn btn-pri">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>

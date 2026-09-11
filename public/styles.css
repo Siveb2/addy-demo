@@ -166,3 +166,63 @@ button{font-family:inherit}
   .r-need{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ================= agent tag on pipeline rows ================= */
+.agent-tag{
+  display:inline-block;margin-left:8px;font-size:9.5px;font-weight:700;letter-spacing:.03em;
+  padding:2px 7px;border-radius:var(--r);background:var(--green-wash);color:var(--green);
+  vertical-align:middle;
+}
+
+/* ================= no-agent notice ================= */
+.noagent{
+  display:flex;gap:9px;align-items:flex-start;padding:10px 13px;
+  background:var(--amber-wash);border:1px solid #f0dfc0;border-radius:10px;
+  font-size:11.5px;line-height:1.5;color:var(--ink-2);
+}
+.noagent b{font-weight:600;color:var(--ink)}
+.na-i{
+  width:16px;height:16px;border-radius:50%;flex:none;margin-top:1px;background:var(--amber);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;
+}
+
+/* ================= checklist pane ================= */
+.check-sum{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
+.cs{font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:var(--r)}
+.cs.done{background:var(--green-wash);color:var(--green)}
+.cs.open{background:var(--amber-wash);color:var(--amber)}
+.cs.wait{background:var(--wash);color:var(--muted);border:1px solid var(--line)}
+
+.check-list{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ci{display:grid;grid-template-columns:20px 1fr;gap:10px;padding:11px 13px;border-bottom:1px solid var(--line);align-items:start}
+.ci:last-child{border-bottom:none}
+.ci-m{
+  width:19px;height:19px;border-radius:50%;flex:none;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;
+}
+.ci.done{background:var(--white)}
+.ci.done .ci-m{background:var(--green);color:#fff}
+.ci.open{background:#fffdf8}
+.ci.open .ci-m{background:var(--amber);color:#fff}
+.ci.wait .ci-m{background:var(--wash);color:var(--faint);border:1px solid var(--line-2)}
+.ci-t{margin:0;font-size:12.8px;font-weight:600;line-height:1.35}
+.ci-d{margin:1px 0 0;font-size:11.5px;color:var(--muted);line-height:1.4}
+.ci.wait .ci-t{color:var(--muted);font-weight:500}
+
+/* ================= guidelines pane ================= */
+.guide-for{margin:0 0 12px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+.guide-list{display:flex;flex-direction:column;gap:8px}
+.gi{border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--white)}
+.gi.this{background:var(--violet-wash);border-color:#e3d6ff}
+.gi-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.gi-k{font-size:12.5px;font-weight:600;color:var(--ink)}
+.gi.this .gi-k{color:var(--violet-dk)}
+.gi-v{font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gi.this .gi-v{color:var(--violet-dk)}
+.gi-s{margin:3px 0 0;font-size:11.5px;color:var(--muted);line-height:1.4}
+
+.pane-note{margin:13px 0 0;font-size:11px;color:var(--faint);line-height:1.5;font-style:italic}
+
+/* panes are flex children of .side-body — give their contents the same rhythm */
+#paneVoice{display:flex;flex-direction:column;gap:13px}
+#paneChecklist,#paneGuidelines{display:block}
