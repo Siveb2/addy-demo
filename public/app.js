@@ -1,8 +1,7 @@
 /* Addy demo platform — browser voice call via LiveKit.
-   Talks to the public share endpoints on the agent backend:
-     GET  {API}/share/{key}/meta
-     POST {API}/share/{key}/token   -> { token, url }
-   Both are public (the key is the credential), so no server proxy is needed. */
+   Reaches the agent's public share endpoints through /api/share, a same-origin
+   proxy, so the browser never makes a cross-origin request and the backend
+   needs no CORS allowlist entry for this deployment. */
 (function () {
   'use strict';
 
@@ -12,6 +11,23 @@
   var ENV = CFG.env || 'prod';
 
   var $ = function (id) { return document.getElementById(id); };
+
+  /* Endpoint builder.
+     On a deployment with serverless functions we go through /api/share — the
+     page's OWN origin — so there is no CORS preflight and nothing to allowlist
+     on the backend. On a plain static server (file:// or python -m http.server)
+     there are no functions, so fall back to calling the backend directly; that
+     path does need the origin allowlisted. */
+  var USE_PROXY = location.protocol === 'http:' || location.protocol === 'https:';
+  function ep(path) {
+    if (USE_PROXY) {
+      return '/api/share?path=' + path
+        + '&api=' + encodeURIComponent(API)
+        + '&key=' + encodeURIComponent(KEY)
+        + '&env=' + encodeURIComponent(ENV);
+    }
+    return API + '/share/' + encodeURIComponent(KEY) + '/' + path;
+  }
 
   /* ---------------- demo leads ---------------- */
   var LEADS = [
@@ -208,7 +224,7 @@
     ev('→', 'Starting call', current.name, 'on');
 
     try {
-      var r = await fetch(API + '/share/' + encodeURIComponent(KEY) + '/token', {
+      var r = await fetch(ep('token'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ env: ENV })
@@ -287,7 +303,7 @@
   renderSelected();
 
   if (API && KEY) {
-    fetch(API + '/share/' + encodeURIComponent(KEY) + '/meta')
+    fetch(ep('meta'))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (m) { if (m && m.name) $('sideBadge').title = 'Agent: ' + m.name; })
       .catch(function () {});

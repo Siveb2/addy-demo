@@ -12,6 +12,7 @@ public/index.html   the platform UI
 public/styles.css   Addy theme (violet #8b5cf6, Inter, 22px pills)
 public/config.js    <- the only file you edit
 public/app.js       lead list + LiveKit browser call
+api/share.js        same-origin proxy (removes the CORS dependency)
 ```
 
 ---
@@ -57,11 +58,13 @@ update cycle.
 ## Run locally
 
 ```bash
-cd public && python3 -m http.server 8000
+npx vercel dev        # http://localhost:3000
 ```
 
-Then open `http://localhost:8000`. No serverless functions, so a plain static
-server is enough.
+`npx vercel dev` runs the proxy function too. A plain static server
+(`python3 -m http.server`) serves the page but not `/api/share`, so the call
+falls back to hitting the backend directly — which then *does* need the origin
+allowlisted.
 
 `getUserMedia` requires a secure context — `localhost` counts, other hostnames
 need HTTPS.
@@ -70,21 +73,24 @@ need HTTPS.
 
 ## How it works
 
-Two public endpoints on the backend, called straight from the browser:
+The browser calls **its own origin**:
 
 ```
-GET  {apiUrl}/share/{callKey}/meta     -> { name, greeting }
-POST {apiUrl}/share/{callKey}/token    -> { token, url }
+GET /api/share?path=meta     -> { name, greeting }
+GET /api/share?path=token    -> { token, url }
 ```
 
-Then `livekit-client` (UMD, from cdnjs) joins the room with that token and
-publishes the mic. The agent worker joins the same room and talks back.
+`api/share.js` forwards that server-to-server to the backend's public share
+endpoints. Because the browser never makes a cross-origin request, **there is
+no CORS preflight and nothing to allowlist on the backend** — the demo works
+on any Vercel URL, including every preview deployment, with no server-side
+configuration.
 
-The CORS origin of your deployment must be allowed by the backend. If the call
-fails with a CORS error in the console, add the Vercel URL to the backend's
-allowed origins.
+Then `livekit-client` (UMD, from cdnjs) joins the room with the returned token
+and publishes the mic. The agent worker joins the same room and talks back.
 
----
+The backend URL and call key are baked into `api/share.js` as fallbacks, so the
+page works even if `config.js` is blanked.
 
 ## Using it in the demo
 
@@ -111,5 +117,4 @@ To change the demo files, edit the `LEADS` array at the top of `app.js`.
 | "Quota exceeded" | Agent owner's plan is out of minutes |
 | "All lines busy" | Concurrency cap reached — wait and retry |
 | "Microphone permission denied" | Allow the mic; needs HTTPS or localhost |
-| CORS error in console | Add the deployed URL to the backend's allowed origins |
 | Connects, no voice | The agent worker isn't running, or has no TTS configured |
