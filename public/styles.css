@@ -141,10 +141,11 @@ button{font-family:inherit}
 
 .side-foot{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line);flex:none}
 .btn{flex:1;border:1px solid var(--line-2);background:var(--white);cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-2);padding:10px;border-radius:9px;display:flex;align-items:center;justify-content:center;gap:7px;transition:filter .14s,background .14s}
-.btn:hover:not(:disabled){background:var(--wash)}
+.btn:not(.btn-pri):hover:not(:disabled){background:var(--wash)}
 .btn:focus-visible{outline:2px solid var(--violet);outline-offset:1px}
-.btn-pri{background:linear-gradient(135deg,var(--violet-lt),var(--violet));border-color:transparent;color:#fff}
-.btn-pri:hover:not(:disabled){filter:brightness(1.07)}
+.btn-pri{background:linear-gradient(135deg,var(--violet-lt),var(--violet));border-color:transparent;color:#fff;box-shadow:0 1px 2px rgba(109,63,240,.22)}
+.btn-pri:hover:not(:disabled){background:linear-gradient(135deg,var(--violet),var(--violet-dk));box-shadow:0 3px 10px rgba(109,63,240,.32)}
+.btn-pri:active:not(:disabled){transform:translateY(1px)}
 .btn-dgr{color:var(--red);border-color:#eccfcb;flex:0 0 78px}
 .btn:disabled{opacity:.45;cursor:default}
 .legal{margin:0;padding:0 16px 13px;font-size:10.5px;color:var(--faint);text-align:center}
