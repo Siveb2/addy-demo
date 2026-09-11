@@ -226,3 +226,7 @@ button{font-family:inherit}
 /* panes are flex children of .side-body — give their contents the same rhythm */
 #paneVoice{display:flex;flex-direction:column;gap:13px}
 #paneChecklist,#paneGuidelines{display:block}
+
+/* `hidden` must beat any class that sets display (.noagent, .call, panes).
+   Without this, el.hidden = true is silently ignored. */
+[hidden]{display:none!important}
