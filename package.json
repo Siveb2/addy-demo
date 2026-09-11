@@ -1,0 +1,8 @@
+{
+  "name": "addy-demo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Addy AI platform mock with a live voice assistant widget",
+  "type": "module",
+  "engines": { "node": ">=18" }
+}
