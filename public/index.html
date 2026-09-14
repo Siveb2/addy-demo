@@ -81,6 +81,7 @@
       <button class="side-tab" role="tab" data-tab="checklist" aria-selected="false" tabindex="-1">Checklist</button>
       <button class="side-tab" role="tab" data-tab="voice" aria-selected="true">Voice</button>
       <button class="side-tab" role="tab" data-tab="guidelines" aria-selected="false" tabindex="-1">Guidelines</button>
+      <button class="side-tab" role="tab" data-tab="ask" aria-selected="false" tabindex="-1">Ask Addy</button>
     </div>
 
     <div class="side-body" id="sideBody">
@@ -95,6 +96,10 @@
           </div>
         </div>
         <div class="sel-grid" id="selGrid"></div>
+        <label class="sel-phone">
+          <span>Phone number</span>
+          <input id="leadPhone" type="tel" inputmode="tel" placeholder="+1 415 555 0142" autocomplete="off">
+        </label>
       </div>
 
       <!-- ===== VOICE ===== -->
@@ -134,6 +139,12 @@
         <p class="pane-note">Generated from the file and AUS findings. Outstanding items become the call brief.</p>
       </div>
 
+      <!-- ===== ASK ADDY ===== -->
+      <div id="paneAsk" hidden>
+        <div class="chat" id="chatLog"></div>
+        <div class="chat-suggest" id="chatSuggest"></div>
+      </div>
+
       <!-- ===== GUIDELINES ===== -->
       <div id="paneGuidelines" hidden>
         <p class="guide-for" id="guideFor"></p>
@@ -141,6 +152,11 @@
         <p class="pane-note">Agency guidelines checked against this scenario. Voice never quotes these — it defers to the file.</p>
       </div>
 
+    </div>
+
+    <div class="chat-foot" id="chatFoot" hidden>
+      <textarea id="chatInput" rows="1" placeholder="Ask about this file, or say &quot;call her&quot;…"></textarea>
+      <button id="chatSend" class="chat-send" aria-label="Send">↑</button>
     </div>
 
     <div class="side-foot" id="sideFoot">

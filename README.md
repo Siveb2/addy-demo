@@ -11,9 +11,67 @@ Four static files. No build, no dependencies, no server code.
 public/index.html   the platform UI
 public/styles.css   Addy theme (violet #8b5cf6, Inter, 22px pills)
 public/config.js    <- the only file you edit
-public/app.js       lead list + LiveKit browser call
-api/share.js        same-origin proxy (removes the CORS dependency)
+public/app.js       lead list + LiveKit browser call + Ask Addy chat
+api/share.js        same-origin proxy for the browser voice call
+api/chat.js         the Ask Addy assistant — chat + place_voice_call tool
 ```
+
+---
+
+## Environment variables
+
+Set these in Vercel → Settings → Environment Variables, then redeploy.
+
+| Variable | Needed for | Notes |
+|---|---|---|
+| `OPENAI_API_KEY` | **Ask Addy chat** | Without it the chat says it isn't configured |
+| `AGENT_API_KEY` | **Real outbound calls** | Without it calls are accepted but simulated |
+| `AGENT_ID` | Which agent dials | Optional — falls back to the lead's call key |
+| `AGENT_API_URL` | Backend base URL | Defaults to `https://api.metallabs.io` |
+| `DEMO_ALLOW` | Safety | **Set this.** Comma-separated E.164 allowlist |
+
+**Nothing secret reaches the browser.** Both keys are read server-side in
+`api/chat.js` only.
+
+**Degradation is deliberate:** with no `OPENAI_API_KEY` the chat explains itself
+rather than erroring. With no `AGENT_API_KEY` the assistant still behaves
+correctly and reports a simulated call — so the demo never breaks in front of
+someone, it just stops dialling.
+
+---
+
+## Ask Addy — the assistant tab
+
+A fourth tab beside Checklist / Voice / Guidelines.
+
+It answers questions about the **selected loan file** — what's outstanding, what
+cleared, whether the numbers sit inside guideline, what's blocking closing — from
+the file data, with instructions never to invent a figure.
+
+And it can **place a real call** when you ask:
+
+> **You:** call Sarah and chase those two documents
+> **Addy:** Calling Sarah Mitchell at (415) 555-0142 about the July bank
+> statement and the deposit explanation. I'll let you know how it goes.
+
+The tool call renders as a distinct dark card, not as text, so it's visually
+obvious the assistant *did something* rather than *said something*.
+
+**The refusal path is worth demoing.** Select a file with no phone number, ask it
+to call, and it declines with a reason instead of failing — which shows the gates
+are real.
+
+### How it works
+
+`api/chat.js` runs the tool loop server-side:
+
+1. Messages + the `place_voice_call` tool definition go to OpenAI
+2. If the model calls the tool, the proxy checks the phone number and the
+   allowlist, then `POST`s to `{AGENT_API_URL}/outbound/calls`
+3. The result is fed back and the model phrases the reply
+
+The system prompt is built per request from the selected lead — facts,
+checklist, guidelines, outstanding items, phone number.
 
 ---
 

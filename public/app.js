@@ -36,7 +36,7 @@
       meta: 'Loan 4471 · Conventional Purchase',
       need: 'July bank statement + LOE for $4,200 deposit',
       status: ['Awaiting borrower', 'w'],
-      callKey: 'f705df7553814fc9be562ab804f7e54c',
+      callKey: 'f705df7553814fc9be562ab804f7e54c', phone: '',
       facts: [['Amount', '$625,000'], ['LTV', '80.0%'], ['DTI', '38.2%'], ['FICO', '744']],
       ask: ['July bank statement — Chase ····4421', 'Letter explaining the $4,200 deposit on 07/12'],
       checklist: [
@@ -62,7 +62,7 @@
       meta: 'Loan 4482 · FHA Purchase',
       need: 'Updated paystubs — last 30 days',
       status: ['Awaiting borrower', 'w'],
-      callKey: '',
+      callKey: '', phone: '',
       facts: [['Amount', '$412,000'], ['LTV', '96.5%'], ['DTI', '41.8%'], ['FICO', '689']],
       ask: ['Two most recent paystubs', 'Confirm employer contact for VOE'],
       checklist: [
@@ -85,7 +85,7 @@
       meta: 'Loan 4455 · Conventional Refi',
       need: "Homeowner's insurance declaration page",
       status: ['Needs call', 'v'],
-      callKey: 'd6930306a370469b99acec6678f55f1f',
+      callKey: 'd6930306a370469b99acec6678f55f1f', phone: '',
       facts: [['Amount', '$338,500'], ['LTV', '72.1%'], ['DTI', '33.4%'], ['FICO', '771']],
       ask: ['Insurance declaration page', 'Confirm mailing address on file'],
       checklist: [
@@ -110,7 +110,7 @@
       meta: 'Loan 4490 · Jumbo Purchase',
       need: 'Gift letter + donor bank statement',
       status: ['Awaiting borrower', 'w'],
-      callKey: '',
+      callKey: '', phone: '',
       facts: [['Amount', '$1,240,000'], ['LTV', '78.0%'], ['DTI', '36.0%'], ['FICO', '802']],
       ask: ['Signed gift letter', 'Donor bank statement showing the transfer'],
       checklist: [
@@ -145,6 +145,8 @@
       row.setAttribute('role', 'button');
       var agentTag = l.callKey
         ? '<span class="agent-tag" title="This file has a live voice agent">\u25CF Agent ready</span>' : '';
+      var ph = loadPhone(l);
+      if (ph) agentTag += '<span class="phone-chip">' + ph + '</span>';
       row.innerHTML =
         '<span class="r-av">' + l.initials + '</span>' +
         '<div><p class="r-n">' + l.name + agentTag + '</p><p class="r-m">' + l.meta + '</p></div>' +
@@ -170,6 +172,7 @@
     $('selAv').textContent = current.initials;
     $('selName').textContent = current.name;
     $('selMeta').textContent = current.meta;
+    var _pe = $('leadPhone'); if (_pe) _pe.value = loadPhone(current);
 
     var g = $('selGrid'); g.innerHTML = '';
     current.facts.forEach(function (f) {
@@ -199,11 +202,179 @@
     $('paneVoice').hidden = activeTab !== 'voice';
     $('paneChecklist').hidden = activeTab !== 'checklist';
     $('paneGuidelines').hidden = activeTab !== 'guidelines';
+    $('paneAsk').hidden = activeTab !== 'ask';
     $('sideFoot').hidden = activeTab !== 'voice';
+    $('chatFoot').hidden = activeTab !== 'ask';
     if (activeTab === 'voice') renderVoicePane();
     if (activeTab === 'checklist') renderChecklist();
     if (activeTab === 'guidelines') renderGuidelines();
+    if (activeTab === 'ask') renderAsk();
   }
+
+  /* ================= phone number on the lead ================= */
+  function phoneKey(l) { return 'addy_phone_' + l.id; }
+
+  function loadPhone(l) {
+    if (l.phone) return l.phone;
+    try { return localStorage.getItem(phoneKey(l)) || ''; } catch (_) { return ''; }
+  }
+
+  function savePhone(l, v) {
+    l.phone = v;
+    try { v ? localStorage.setItem(phoneKey(l), v) : localStorage.removeItem(phoneKey(l)); } catch (_) {}
+  }
+
+  function normPhone(v) {
+    var d2 = String(v || '').replace(/[^\d+]/g, '');
+    if (!d2) return '';
+    if (d2.charAt(0) === '+') return d2;
+    if (d2.length === 10) return '+1' + d2;
+    if (d2.length === 11 && d2.charAt(0) === '1') return '+' + d2;
+    return d2;
+  }
+
+  var phoneEl = $('leadPhone');
+  phoneEl.addEventListener('input', function () { savePhone(current, phoneEl.value.trim()); renderRows(); });
+  phoneEl.addEventListener('blur', function () {
+    var n = normPhone(phoneEl.value);
+    phoneEl.value = n; savePhone(current, n); renderRows();
+  });
+
+  /* ================= ask addy ================= */
+  var chatState = {};          // lead id -> { messages: [], rendered: bool }
+
+  function chatFor(id) {
+    if (!chatState[id]) chatState[id] = { messages: [] };
+    return chatState[id];
+  }
+
+  function renderAsk() {
+    var st = chatFor(current.id);
+    var log = $('chatLog');
+    log.innerHTML = '';
+
+    if (!st.messages.length) {
+      addBubble('addy', 'I\u2019ve got ' + (current.name || 'this file') + ' open \u2014 '
+        + (current.ask || []).length + ' item' + ((current.ask || []).length === 1 ? '' : 's')
+        + ' still outstanding. Ask me anything about it, or tell me to call.');
+    } else {
+      st.messages.forEach(function (m) {
+        if (m.role === 'user') addBubble('you', m.content);
+        else if (m.role === 'assistant' && m.content) addBubble('addy', m.content);
+        else if (m.role === '_event') addEvent(m.ev);
+      });
+    }
+    renderSuggestions();
+  }
+
+  function renderSuggestions() {
+    var s = $('chatSuggest');
+    s.innerHTML = '';
+    var opts = ['What\u2019s outstanding?', 'Is the LTV within guideline?', 'What\u2019s blocking closing?',
+                'Call ' + ((current.name || '').split(' ')[0] || 'them')];
+    opts.forEach(function (t) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.textContent = t;
+      b.addEventListener('click', function () { $('chatInput').value = t; sendChat(); });
+      s.appendChild(b);
+    });
+  }
+
+  function addBubble(who, text) {
+    var d2 = document.createElement('div');
+    d2.className = 'msg ' + (who === 'you' ? 'you' : 'addy');
+    var w = document.createElement('p'); w.className = 'who'; w.textContent = who === 'you' ? 'You' : 'Addy';
+    var b = document.createElement('div'); b.className = 'bub'; b.textContent = text;
+    d2.appendChild(w); d2.appendChild(b);
+    $('chatLog').appendChild(d2);
+    scrollChat();
+  }
+
+  function addEvent(ev) {
+    var d2 = document.createElement('div');
+    var cls = ev.type === 'call_started' ? '' : (ev.type === 'refused' ? ' refused' : ' err');
+    d2.className = 'ev-card' + cls;
+    var icon = ev.type === 'call_started' ? '\u260E' : (ev.type === 'refused' ? '!' : '\u26A0');
+    d2.innerHTML = '<span class="ic">' + icon + '</span><div><b></b><em></em></div>';
+    d2.querySelector('b').textContent =
+      ev.type === 'call_started' ? (ev.simulated ? 'Call started (demo mode)' : 'Call started')
+      : ev.type === 'refused' ? 'Call refused' : 'Error';
+    d2.querySelector('em').textContent = ev.text + (ev.call_id ? ' \u00B7 ' + ev.call_id : '');
+    $('chatLog').appendChild(d2);
+    scrollChat();
+  }
+
+  function scrollChat() { $('sideBody').scrollTop = $('sideBody').scrollHeight; }
+
+  function typing(on) {
+    var ex = document.getElementById('typingDots');
+    if (ex) ex.remove();
+    if (!on) return;
+    var t = document.createElement('div');
+    t.className = 'typing'; t.id = 'typingDots';
+    t.innerHTML = '<i></i><i></i><i></i>';
+    $('chatLog').appendChild(t);
+    scrollChat();
+  }
+
+  var chatBusy = false;
+
+  async function sendChat() {
+    if (chatBusy) return;
+    var input = $('chatInput');
+    var text = (input.value || '').trim();
+    if (!text) return;
+
+    var st = chatFor(current.id);
+    input.value = ''; input.style.height = 'auto';
+    st.messages.push({ role: 'user', content: text });
+    addBubble('you', text);
+
+    chatBusy = true; $('chatSend').disabled = true; typing(true);
+
+    try {
+      var payload = {
+        lead: {
+          id: current.id, name: current.name, meta: current.meta,
+          phone: loadPhone(current), callKey: current.callKey,
+          facts: current.facts, checklist: current.checklist,
+          guidelines: current.guidelines, ask: current.ask
+        },
+        messages: st.messages.filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
+      };
+      var r = await fetch('/api/chat', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      var data = await r.json();
+      typing(false);
+
+      (data.events || []).forEach(function (ev) {
+        st.messages.push({ role: '_event', ev: ev });
+        addEvent(ev);
+        if (ev.type === 'call_started' && !ev.simulated) badge('Call live', 'live');
+      });
+
+      if (data.reply) {
+        st.messages.push({ role: 'assistant', content: data.reply });
+        addBubble('addy', data.reply);
+      }
+    } catch (e) {
+      typing(false);
+      addEvent({ type: 'error', text: String(e.message || e) });
+    } finally {
+      chatBusy = false; $('chatSend').disabled = false; input.focus();
+    }
+  }
+
+  $('chatSend').addEventListener('click', sendChat);
+  $('chatInput').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+  });
+  $('chatInput').addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = Math.min(110, this.scrollHeight) + 'px';
+  });
 
   function renderVoicePane() {
     var ul = $('askList'); ul.innerHTML = '';

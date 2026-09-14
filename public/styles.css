@@ -230,3 +230,83 @@ button{font-family:inherit}
 /* `hidden` must beat any class that sets display (.noagent, .call, panes).
    Without this, el.hidden = true is silently ignored. */
 [hidden]{display:none!important}
+
+/* ================= phone field on the lead ================= */
+.sel-phone{display:block;margin-top:11px}
+.sel-phone span{display:block;font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.sel-phone input{
+  width:100%;border:1px solid var(--line-2);border-radius:8px;padding:8px 11px;
+  font-family:inherit;font-size:13px;color:var(--ink);background:var(--white);
+  font-variant-numeric:tabular-nums;
+}
+.sel-phone input:focus{outline:2px solid var(--violet);outline-offset:-1px;border-color:transparent}
+.sel-phone input::placeholder{color:var(--faint)}
+.phone-chip{
+  display:inline-block;margin-left:8px;font-size:9.5px;font-weight:700;
+  padding:2px 7px;border-radius:var(--r);background:var(--wash);
+  border:1px solid var(--line);color:var(--muted);vertical-align:middle;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ================= ask addy chat ================= */
+#paneAsk{display:flex;flex-direction:column;gap:11px}
+.chat{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:92%;font-size:13px;line-height:1.5;animation:rise .22s ease both}
+.msg .bub{padding:9px 12px;border-radius:12px}
+.msg.you{align-self:flex-end}
+.msg.you .bub{background:var(--wash);border:1px solid var(--line);border-bottom-right-radius:3px;color:var(--ink)}
+.msg.addy{align-self:flex-start}
+.msg.addy .bub{background:var(--violet-wash);border:1px solid #e6dbff;border-bottom-left-radius:3px;color:var(--ink)}
+.msg .who{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+.msg.addy .who{color:var(--violet-dk)}
+
+/* tool-call event card — visually distinct from speech */
+.ev-card{
+  align-self:stretch;display:flex;gap:10px;align-items:flex-start;
+  padding:11px 13px;border-radius:10px;font-size:12.5px;line-height:1.45;
+  background:linear-gradient(140deg,#1a1030,#30205b);color:#fff;
+  animation:rise .22s ease both;
+}
+.ev-card .ic{
+  width:20px;height:20px;border-radius:6px;flex:none;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+  background:rgba(255,255,255,.16);
+}
+.ev-card b{display:block;font-weight:600;margin-bottom:2px}
+.ev-card em{font-style:normal;font-size:11px;color:rgba(255,255,255,.6);font-variant-numeric:tabular-nums}
+.ev-card.refused{background:var(--amber-wash);color:var(--ink-2);border:1px solid #f0dfc0}
+.ev-card.refused .ic{background:var(--amber);color:#fff}
+.ev-card.refused b{color:var(--amber)}
+.ev-card.err{background:var(--red-wash);color:var(--ink-2);border:1px solid #f1cfca}
+.ev-card.err .ic{background:var(--red);color:#fff}
+.ev-card.err b{color:var(--red)}
+
+.typing{align-self:flex-start;display:flex;gap:4px;padding:11px 13px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--violet-lt);display:block;animation:bounce 1.3s ease-in-out infinite}
+.typing i:nth-child(2){animation-delay:.18s}
+.typing i:nth-child(3){animation-delay:.36s}
+@keyframes bounce{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+
+.chat-suggest{display:flex;flex-wrap:wrap;gap:6px}
+.chat-suggest button{
+  font-family:inherit;font-size:11.5px;padding:6px 11px;border-radius:var(--r);
+  background:var(--white);border:1px solid var(--line-2);color:var(--ink-2);cursor:pointer;
+}
+.chat-suggest button:hover{background:var(--wash);border-color:var(--violet-lt);color:var(--violet-dk)}
+.chat-suggest button:focus-visible{outline:2px solid var(--violet);outline-offset:1px}
+
+.chat-foot{display:flex;gap:8px;align-items:flex-end;padding:12px 16px;border-top:1px solid var(--line);flex:none}
+.chat-foot textarea{
+  flex:1;border:1px solid var(--line-2);border-radius:10px;padding:9px 12px;
+  font-family:inherit;font-size:13px;line-height:1.45;color:var(--ink);
+  background:var(--white);resize:none;max-height:110px;
+}
+.chat-foot textarea:focus{outline:2px solid var(--violet);outline-offset:-1px;border-color:transparent}
+.chat-send{
+  width:36px;height:36px;flex:none;border:none;border-radius:9px;cursor:pointer;
+  background:linear-gradient(135deg,var(--violet-lt),var(--violet));color:#fff;
+  font-size:16px;line-height:1;
+}
+.chat-send:hover:not(:disabled){filter:brightness(1.07)}
+.chat-send:disabled{opacity:.45;cursor:default}
+.chat-send:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
