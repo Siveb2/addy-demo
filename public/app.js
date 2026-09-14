@@ -8,6 +8,7 @@
   var CFG = window.ADDY_CONFIG || {};
   var API = (CFG.apiUrl || '').replace(/\/+$/, '');
   var FALLBACK_KEY = CFG.callKey || '';
+  var JACK_KEY = CFG.jackCallKey || FALLBACK_KEY;
   var ENV = CFG.env || 'prod';
 
   var $ = function (id) { return document.getElementById(id); };
@@ -234,7 +235,7 @@
   }
 
   var phoneEl = $('leadPhone');
-  phoneEl.addEventListener('input', function () { savePhone(current, phoneEl.value.trim()); renderRows(); });
+  phoneEl.addEventListener('input', function () { savePhone(current, phoneEl.value.trim()); renderRows(); if (activeTab === 'voice') renderVoicePane(); });
   phoneEl.addEventListener('blur', function () {
     var n = normPhone(phoneEl.value);
     phoneEl.value = n; savePhone(current, n); renderRows();
@@ -381,9 +382,14 @@
     current.ask.forEach(function (a) {
       var li = document.createElement('li'); li.textContent = a; ul.appendChild(li);
     });
-    $('noAgent').hidden = !!current.callKey;
-    startBtn.disabled = !current.callKey || connected;
-    startBtn.title = current.callKey ? '' : 'No voice agent configured for this file';
+    var tgt = document.getElementById('callTargetNum');
+    if (tgt) {
+      var ph = loadPhone(current);
+      tgt.textContent = ph || '— add a number';
+    }
+    $('noAgent').hidden = true;              // Jack is always available
+    startBtn.disabled = connected;
+    startBtn.title = '';
   }
 
   function renderChecklist() {
@@ -509,7 +515,7 @@
   async function start() {
     if (connected) return;
 
-    var key = current.callKey || FALLBACK_KEY;
+    var key = JACK_KEY;   // the browser call is always to Jack, the LO's assistant
     if (!API || !key) {
       ev('!', 'No agent for this file', 'Add a callKey in app.js', 'err');
       badge('Setup needed', 'err');
@@ -598,7 +604,7 @@
     setStatus('Not connected', true);
     badge('Ready', '');
     endBtn.disabled = true;
-    startBtn.disabled = !current.callKey;
+    startBtn.disabled = false;
   }
 
   window.addEventListener('beforeunload', function () { if (room) try { room.disconnect(); } catch (_) {} });
@@ -608,7 +614,7 @@
   renderSelected();
   renderTab();
 
-  var bootKey = current.callKey || FALLBACK_KEY;
+  var bootKey = JACK_KEY;
   if (API && bootKey) {
     fetch(ep('meta', bootKey))
       .then(function (r) { return r.ok ? r.json() : null; })

@@ -310,3 +310,5 @@ button{font-family:inherit}
 .chat-send:hover:not(:disabled){filter:brightness(1.07)}
 .chat-send:disabled{opacity:.45;cursor:default}
 .chat-send:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+
+.ask-note{margin:0 0 9px;font-size:11.5px;line-height:1.45;color:var(--ink-2)}

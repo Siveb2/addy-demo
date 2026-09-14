@@ -105,13 +105,19 @@
       <!-- ===== VOICE ===== -->
       <div id="paneVoice">
         <div class="ask">
-          <h4>Addy will ask for</h4>
+          <h4>Talk to Jack about this file</h4>
+          <p class="ask-note">Jack knows the file. Ask what's outstanding, or tell him to call the borrower.</p>
           <ul id="askList"></ul>
         </div>
 
         <div class="consent">
           <span class="ck" aria-hidden="true">✓</span>
           <div><b>Consent on file.</b> E-signed — servicing contact, AI disclosed.</div>
+        </div>
+
+        <div class="consent" id="callTargetNote">
+          <span class="ck" aria-hidden="true">☎</span>
+          <div>If Jack calls, <b>Alex</b> dials <b id="callTargetNum">— add a number</b>.</div>
         </div>
 
         <div class="noagent" id="noAgent" hidden>
@@ -165,11 +171,11 @@
           <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
           <path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>
         </svg>
-        Talk to Addy
+        Talk to Jack
       </button>
       <button id="btnEnd" class="btn btn-dgr" disabled>End</button>
     </div>
-    <p class="legal">Browser call · your mic · recorded for quality</p>
+    <p class="legal">You are the loan officer · Jack is your assistant</p>
   </aside>
 
 </div>
