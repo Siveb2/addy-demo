@@ -8,10 +8,10 @@ window.ADDY_CONFIG = {
   // ---- JACK — the browser voice agent the LOAN OFFICER talks to -------------
   // Male voice. Knows Sarah Mitchell's file. Has a custom tool that calls
   // /api/call-sarah, which dials Alex. Paste his public_call_key here.
-  jackCallKey: "f705df7553814fc9be562ab804f7e54c",
+  jackCallKey: "b1a9977aca0646ddb5182cdc0af94def",
 
   // ---- Fallback for any lead without its own key ---------------------------
-  callKey: "f705df7553814fc9be562ab804f7e54c",
+  callKey: "b1a9977aca0646ddb5182cdc0af94def",
 
   // "prod" = published agent, "draft" = whatever is in the editor.
   env: "prod"
