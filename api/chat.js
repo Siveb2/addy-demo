@@ -10,15 +10,30 @@
  *   3. feed the result back and let the model phrase the reply
  *
  * Vercel env vars (Settings -> Environment Variables):
- *   OPENAI_API_KEY   required for chat
- *   AGENT_API_URL    backend base url (defaults to the public one below)
- *   AGENT_API_KEY    platform api key — required only to place real calls
- *   AGENT_ID         which agent dials (optional; falls back to the lead's key)
- *   DEMO_ALLOW       comma-separated E.164 allowlist (strongly recommended)
+ *   OPENAI_API_KEY     required for chat
+ *   AGENT_API_URL      backend base url (defaults to the public one below)
+ *   AGENT_API_KEY      platform api key — required only to place real calls
+ *   AGENT_ID_SARAH     agent uuid that dials Sarah Mitchell (lead l1)
+ *   AGENT_ID_ROSA      agent uuid that dials Rosa Alvarez (lead l3)
+ *   AGENT_ID           optional catch-all for any other lead
+ *   DEMO_ALLOW         comma-separated E.164 allowlist (strongly recommended)
  */
 
 const FALLBACK_API = 'https://api.metallabs.io';
 const MODEL = process.env.CHAT_MODEL || 'gpt-4o-mini';
+
+/**
+ * Which agent dials which lead. Two agents, one per demo borrower, so Sarah and
+ * Rosa reach differently-configured agents. AGENT_ID is a catch-all for any
+ * other lead; the lead's own public call key is the last resort.
+ */
+function agentIdFor(lead) {
+  const byLead = {
+    l1: process.env.AGENT_ID_SARAH,   // Sarah Mitchell
+    l3: process.env.AGENT_ID_ROSA,    // Rosa Alvarez
+  };
+  return byLead[lead.id] || process.env.AGENT_ID || lead.callKey || '';
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -132,7 +147,7 @@ async function runTool(name, args, lead, events) {
 
   const base = (process.env.AGENT_API_URL || FALLBACK_API).replace(/\/+$/, '');
   const apiKey = process.env.AGENT_API_KEY;
-  const agentId = process.env.AGENT_ID || lead.callKey;
+  const agentId = agentIdFor(lead);
 
   if (!apiKey || !agentId) {
     // Demo-safe path: the assistant still behaves correctly, nothing dials.
